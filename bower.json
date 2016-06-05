@@ -1,0 +1,22 @@
+{
+  "name": "stackedBarChartExample",
+  "authors": [
+    "William Hill <mjh2225@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.5.17",
+    "jquery": "~2.2.4"
+  }
+}
