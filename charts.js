@@ -2,14 +2,19 @@ $(function() {
     "use strict";
 
     /**
-     * set up margins for SVG; These are chosen arbitrarily 
+    * sample code from https://bl.ocks.org/mbostock/3886208
+    */
+
+    /**
+     * set up margins for SVG; These are chosen arbitrarily
+     * saraford: increasing right margin for legend
      */
-    var margin = { top: 20, right: 50, bottom: 30, left: 20 };
+    var margin = { top: 20, right: 200, bottom: 30, left: 20 };
     var width = 960 - margin.left - margin.right;
     var height = 500 - margin.top - margin.bottom;
 
     /**
-     * Sets up an ordinal scale that will be used on the X axis date labels    
+     * Sets up an ordinal scale that will be used on the X axis date labels
      */
     var xScale = d3.scale.ordinal()
         .rangeRoundBands([0, width]);
@@ -66,7 +71,7 @@ $(function() {
 
         var formattedData = stuffedAnimals.map(function(header, headerIndex) { //Called map function on headers Array; will return a new Array
             return data.map(function(eachMonthData, index){ //Called map function on original parsed CSV data; will return a new array
-            	return {x: eachMonthData["Month"], y: eachMonthData[header], animal:header} //returns a new object at each iteration; sets x value to be the Stuff animal name and the y value to be the number sold for a given month using the value from the header Array as a lookup	
+            	return {x: eachMonthData["Month"], y: eachMonthData[header], animal:header} //returns a new object at each iteration; sets x value to be the Stuff animal name and the y value to be the number sold for a given month using the value from the header Array as a lookup
             })
         });
         // console.log("formattedData: ", JSON.stringify(formattedData, null, '\t'));
@@ -98,7 +103,7 @@ $(function() {
                 return color(d[i].animal);
             }); //fills with color according to d3.scale.category10()
 
-        //Appends the scaled rectangles      
+        //Appends the scaled rectangles
         layer.selectAll("rect")
             .data(function(d) {
                 return d;
@@ -116,7 +121,7 @@ $(function() {
                 //Get this bar's x/y values, then augment for the tooltip
                 var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.rangeBand() / 2;
                 var yPosition = parseFloat(d3.select(this).attr("y")) + 14;
-                
+
                 //Update the tooltip position and value
                 d3.select("#tooltip")
                   .style("left", xPosition + "px")
@@ -145,6 +150,26 @@ $(function() {
             .attr("class", "axis axis--y")
             .attr("transform", "translate(" + width + ",0)")
             .call(yAxis);
+
+        // creates the legend in the upper-right corner
+        var legend = svg.selectAll(".legend")
+            .data(color.domain().slice().reverse())
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(200," + i * 20 + ")"; });
+
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", color);
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) { return d; });
     });
     //Accessor function that converts the amount sold that was parsed from the CSV from a String to a Number
     function type(d) {
@@ -157,5 +182,3 @@ $(function() {
     }
 
 });
-
-
